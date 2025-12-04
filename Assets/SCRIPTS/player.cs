@@ -6,19 +6,21 @@ public class player : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 8.0f;
     float xMin, xMax;
-    [SerializeField] int playerHealth = 100;
-   
-   
+    [SerializeField] int playerHealth = 20;
+    [SerializeField] AudioClip playerDeathSound;
+    [SerializeField][Range(0, 1)] float playerDeathSoundVolume = 0.75f;
+
+
 
 
     private void Start()
     {
-     
+
         SetupMoveBounderies();
     }
     public void Update()
     {
-      
+
         Move();
     }
     private void SetupMoveBounderies()
@@ -36,7 +38,34 @@ public class player : MonoBehaviour
         //new Vector3(newXPos, newYPos, Camera.main.transform.position.z);
         transform.position = new Vector2(newXPos, transform.position.y);
     }
-    
-    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
 
+        damageDealer damageDealer = other.gameObject.GetComponent<damageDealer>();
+        if (!damageDealer) { return; }
+        ProcessHit(damageDealer);
+    }
+
+    private void ProcessHit(damageDealer damageDealer)
+    {
+        playerHealth -= damageDealer.GetDamage();
+        damageDealer.Hit();
+
+        if (playerHealth <= 0)
+        {
+            Destroy(gameObject);
+            AudioSource.PlayClipAtPoint(playerDeathSound, Camera.main.transform.position, playerDeathSoundVolume);
+        }
+
+
+    }
 }
+
+   
+
+    
+    
+  
+   
+    
+    
