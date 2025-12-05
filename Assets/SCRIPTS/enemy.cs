@@ -5,7 +5,7 @@ public class enemy : MonoBehaviour
 
     [SerializeField] float health = 100;
     [SerializeField] float explosionDuration;
-    [SerializeField] GameObject explosionVFX;
+    [SerializeField] ParticleSystem explosionVFX;
     [SerializeField] AudioClip deathSound;
     [SerializeField][Range(0, 1)] float deathSoundVolume = 0.75f;
     void Start()
@@ -15,7 +15,7 @@ public class enemy : MonoBehaviour
 
     void Update()
     {
-
+     
     }
 
 
@@ -32,15 +32,14 @@ public class enemy : MonoBehaviour
         //damageDealer.Hit();
         if (health <= 0)
         {
+            ParticleSystem explosion = Instantiate(explosionVFX,transform.position, Quaternion.identity);
+            explosion.Play();
+            AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position, deathSoundVolume);
+         
             Destroy(gameObject);
+           
         }
 
     }
-    private void Die()
-    {
-        GameObject explosion = Instantiate(explosionVFX, transform.position, Quaternion.identity);
-        Destroy(explosion, explosionDuration);
-        AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position, deathSoundVolume);
-        Destroy(gameObject);
-    }
+    
 }

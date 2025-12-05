@@ -207,6 +207,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 1
   explosionDuration: 0
-  explosionVFX: {fileID: 0}
-  deathSound: {fileID: 0}
+  explosionVFX: {fileID: 8681450329909415209, guid: 598c9969ac46e9d43aa80bcb886b1889, type: 3}
+  deathSound: {fileID: 8300000, guid: 9951263f45f97b945ae9683ba3b15b41, type: 3}
   deathSoundVolume: 0.75

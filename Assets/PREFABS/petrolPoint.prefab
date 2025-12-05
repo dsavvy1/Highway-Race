@@ -100,5 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2189ddf54d9801e4ab74648a14336ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  petrolPickUp: {fileID: 8300000, guid: 61e656ffcfaee144ab4587f8475efcf4, type: 3}
+  pickUpVolume: 0.75
   fallSpeed: 3
   destroyY: -6
