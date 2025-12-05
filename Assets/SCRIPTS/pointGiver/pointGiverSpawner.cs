@@ -10,6 +10,7 @@ public class PointGiverSpawner : MonoBehaviour
     public int totalPointGiversToSpawn = 10;
 
     private int pointGiversSpawned = 0;
+    private int totalPointsCollected = 0;
 
     void Start()
     {
@@ -38,6 +39,9 @@ public class PointGiverSpawner : MonoBehaviour
 
             pointGiversSpawned++;
             Debug.Log($"Point-Giver {pointGiversSpawned} spawned!");
+
+
+
         }
 
         Debug.Log("All Point-Givers spawned!");
