@@ -29,7 +29,7 @@ public class enemy : MonoBehaviour
     private void ProcessHit(damageDealer damageDealer)
     {
         health -= damageDealer.GetDamage();
-        damageDealer.Hit();
+        //damageDealer.Hit();
         if (health <= 0)
         {
             Destroy(gameObject);
