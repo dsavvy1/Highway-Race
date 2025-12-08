@@ -13,6 +13,10 @@ public class Level : MonoBehaviour
     {
         SceneManager.LoadScene("highwayRace");
     }
+    public void LoadGameScene2()
+    {
+        SceneManager.LoadScene("highwayRace2");
+    }
     public void LoadGameOverScene()
     {
         SceneManager.LoadScene("gameOverScene");

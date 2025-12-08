@@ -5,34 +5,41 @@ public class PointGiver : MonoBehaviour
     [SerializeField] AudioClip petrolPickUp;
     [SerializeField][Range(0, 1)] float pickUpVolume = 0.75f;
 
-    [Header("Fall Settings")]
     public float fallSpeed = 3f;
     public float destroyY = -20f;
 
-    public int pointsWorth = 1; // how many points this petrol can gives
+    [HideInInspector] public PointGiverSpawner spawner;
+    [HideInInspector] public GameManager gameManager;
+    public int pointsWorth = 1;
+
+    private bool hasReported = false;
 
     void Update()
     {
         transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
 
-        if (transform.position.y <= destroyY)
+        if (!hasReported && transform.position.y <= destroyY)
         {
+            hasReported = true;
+            Debug.Log($"[PointGiver] Missed (fell off). Reporting to spawner. name={gameObject.name}");
+            spawner?.PetrolFinished();
             Destroy(gameObject);
         }
     }
 
-    // Detect collision with player
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (hasReported) return;
+
         if (collision.CompareTag("Player"))
         {
-            // Add score
-            ScoreManager.Instance.AddScore(pointsWorth);
+            hasReported = true;
+            Debug.Log($"[PointGiver] Collected by player. name={gameObject.name}");
+            ScoreManager.Instance?.AddScore(pointsWorth);
+            if (petrolPickUp != null)
+                AudioSource.PlayClipAtPoint(petrolPickUp, Camera.main.transform.position, pickUpVolume);
 
-            // Play sound
-            AudioSource.PlayClipAtPoint(petrolPickUp, Camera.main.transform.position, pickUpVolume);
-
-            // Destroy pickup
+            spawner?.PetrolFinished();
             Destroy(gameObject);
         }
     }

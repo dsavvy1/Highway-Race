@@ -37,6 +37,9 @@ public class enemy : MonoBehaviour
             AudioSource.PlayClipAtPoint(deathSound, Camera.main.transform.position, deathSoundVolume);
          
             Destroy(gameObject);
+
+           
+    
            
         }
 

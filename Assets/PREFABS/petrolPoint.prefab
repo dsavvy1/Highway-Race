@@ -105,6 +105,8 @@ MonoBehaviour:
   pickUpVolume: 0.75
   fallSpeed: 3
   destroyY: -6
+  spawner: {fileID: 0}
+  gameManager: {fileID: 0}
   pointsWorth: 1
 --- !u!61 &-3604892857978145340
 BoxCollider2D:
