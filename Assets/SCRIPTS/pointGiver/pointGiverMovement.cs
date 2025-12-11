@@ -7,14 +7,13 @@ public class PointGiverMovement : MonoBehaviour
     public float leftBoundary = -8f;
     public float rightBoundary = 8f;
 
-    private int direction = 1; // 1 = right, -1 = left
-
+    private int direction = 1; 
     void Update()
     {
         // Move left or right
         transform.Translate(Vector3.right * direction * moveSpeed * Time.deltaTime);
 
-        // Check boundaries and reverse direction
+      
         if (transform.position.x >= rightBoundary)
         {
             direction = -1;

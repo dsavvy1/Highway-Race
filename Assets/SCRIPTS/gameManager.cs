@@ -1,22 +1,26 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [Header("Assignments")]
-    public Level levelScript; // Auto-assigned below; Inspector for override
+    public Level levelScript; // assign in inspector
     public ScoreManager scoreManager; // assign in inspector (optional now)
     public int requiredScore = 10;
     private bool endHandled = false;
+
+    // Survival win for Level 2
+    private float survivalTime = 17f; 
+    private Coroutine survivalTimerCoroutine;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -24,22 +28,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        // Auto-find Level script in current scene
-        if (levelScript == null)
-        {
-            levelScript = FindObjectOfType<Level>();
-            if (levelScript == null)
-                Debug.LogError("[GameManager] No Level script found in scene!");
-        }
-
-        // Reset for new level
-        endHandled = false;
-        ResetLevelState();
-    }
-
-    // Listen for scene loads to re-find Level & reset
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -52,84 +40,79 @@ public class GameManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log($"[GameManager] Scene '{scene.name}' loaded.");
-
-        // Re-find Level for new scene
-        if (levelScript == null)
-        {
-            levelScript = FindObjectOfType<Level>();
-            Debug.Log($"[GameManager] Assigned levelScript: {levelScript != null}");
-        }
-
-        // FIXED: Reset score for NEW LEVEL (prevents carryover triggering instant win)
-        if (ScoreManager.Instance != null)
-        {
-            ScoreManager.Instance.ResetScore();
-        }
+        // Re-find levelScript
+        levelScript = FindObjectOfType<Level>();
+        Debug.Log($"[GameManager] Scene loaded: {scene.name}. levelScript found: {levelScript != null}");
 
         endHandled = false;
-        ResetLevelState();
+
+        // FIXED: Stop any existing timer first to prevent carryover
+        if (survivalTimerCoroutine != null)
+        {
+            StopCoroutine(survivalTimerCoroutine);
+            survivalTimerCoroutine = null;
+            Debug.Log("[GameManager] Existing timer stopped on scene load.");
+        }
+
+        // Start timer only in Level 2 (use your scene name from console)
+        if (scene.name == "highwayRace2")
+        {
+            Debug.Log("[GameManager] Level 2 (highwayRace2) loaded! Starting 10s survival timer...");
+            survivalTimerCoroutine = StartCoroutine(SurvivalTimer());
+        }
+        else
+        {
+            Debug.Log("[GameManager] Scene is " + scene.name + " – NOT starting timer (Level 1 or other).");
+        }
     }
 
-    private void ResetLevelState()
+    // Timer coroutine
+    private IEnumerator SurvivalTimer()
     {
-        // Additional resets if needed (e.g., spawner activePetrol via FindObjectOfType)
-        Debug.Log("[GameManager] Level state reset.");
+        yield return new WaitForSeconds(survivalTime);
+
+        if (!endHandled)
+        {
+            Debug.Log("[GameManager] 10s survived in Level 2! Loading winScene...");
+            if (levelScript != null)
+            {
+                levelScript.LoadWinScene();
+            }
+            else
+            {
+                SceneManager.LoadScene("winScene"); 
+            }
+        }
     }
 
     public void WinLevel()
     {
-        if (endHandled)
-        {
-            Debug.Log("[GameManager] WinLevel called but end already handled.");
-            return;
-        }
+        if (endHandled) return;
         endHandled = true;
         Debug.Log("[GameManager] Collected enough petrol! -> Load Level 2");
-        if (levelScript != null)
-            levelScript.LoadGameScene2();
-        else
-            Debug.LogError("[GameManager] levelScript missing for WinLevel!");
+        levelScript.LoadGameScene2();
     }
 
     public void PlayerDied()
     {
-        if (endHandled)
-        {
-            Debug.Log("[GameManager] PlayerDied called but end already handled.");
-            return;
-        }
+        if (endHandled) return;
         endHandled = true;
         Debug.Log("[GameManager] Player died -> Load Game Over scene");
-        if (levelScript != null)
-            levelScript.LoadGameOverScene();
-        else
-            Debug.LogError("[GameManager] levelScript missing for PlayerDied!");
+        levelScript.LoadGameOverScene();
     }
 
     public void AllPetrolFinished()
     {
         if (endHandled) return;
-
+        endHandled = true;
         int currentScore = ScoreManager.Instance != null ? ScoreManager.Instance.score : 0;
-        Debug.Log($"[GameManager] All petrol finished. score={currentScore}, required={requiredScore}");
-
         if (currentScore >= requiredScore)
         {
-            WinLevel();
+            levelScript.LoadGameScene2();
         }
         else
         {
-            Debug.Log("[GameManager] Not enough score, but respawning petrol for another try...");
-            PointGiverSpawner spawner = FindObjectOfType<PointGiverSpawner>();
-            if (spawner != null)
-            {
-                spawner.RespawnPetrol();
-            }
-            else
-            {
-                Debug.LogError("[GameManager] No PointGiverSpawner found for respawn!");
-            }
+            levelScript.LoadGameOverScene();
         }
     }
 }

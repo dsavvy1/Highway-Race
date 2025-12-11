@@ -21,6 +21,10 @@ public class Level : MonoBehaviour
     {
         SceneManager.LoadScene("gameOverScene");
     }
+    public void LoadWinScene()
+    {
+        SceneManager.LoadScene("winScene");
+    }
 
     public void LoadInstructionScene()
     {

@@ -47,7 +47,7 @@ public class PointGiverSpawner : MonoBehaviour
             Debug.Log($"[Spawner] Spawned #{spawnedCount}. activePetrol={activePetrol}");
         }
         Debug.Log("[Spawner] Finished spawning batch.");
-        // If nothing spawned, notify (rare)
+      
         if (activePetrol <= 0)
         {
             Debug.LogWarning("[Spawner] activePetrol is 0 after spawning. Notifying GameManager to handle level end.");
@@ -55,7 +55,7 @@ public class PointGiverSpawner : MonoBehaviour
         }
     }
 
-    // Called once per petrol can (collected or missed)
+   
     public void PetrolFinished()
     {
         activePetrol--;
@@ -67,7 +67,7 @@ public class PointGiverSpawner : MonoBehaviour
         }
     }
 
-    // NEW: Public method to restart spawning (called on miss-all)
+   
     public void RespawnPetrol()
     {
         Debug.Log("[Spawner] Respawning new batch of petrol!");

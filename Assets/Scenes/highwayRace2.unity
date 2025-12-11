@@ -391,7 +391,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelScript: {fileID: 1909892144}
   scoreManager: {fileID: 0}
-  requiredScore: 0
+  requiredScore: 10
 --- !u!4 &653158772
 Transform:
   m_ObjectHideFlags: 0
