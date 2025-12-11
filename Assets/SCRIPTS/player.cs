@@ -11,7 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField][Range(0, 1)] float playerDeathSoundVolume = 0.75f;
     [SerializeField] HealthBar healthBar;
 
-    // REMOVED: public GameManager gameManager; // No longer needed—use singleton
+   
 
     float xMin, xMax;
 
@@ -20,7 +20,6 @@ public class Player : MonoBehaviour
         SetupMoveBoundaries();
         healthBar.SetMaxHealth(playerHealth);
 
-        // FIXED: Auto-find GameManager.Instance for cross-scene use
         if (GameManager.Instance == null)
         {
             Debug.LogError("[Player] GameManager.Instance not found on Start!");

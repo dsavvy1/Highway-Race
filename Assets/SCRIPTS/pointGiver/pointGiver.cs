@@ -22,7 +22,6 @@ public class PointGiver : MonoBehaviour
         {
             hasReported = true;
             Debug.Log($"[PointGiver] Missed (fell off). Reporting to spawner. name={gameObject.name}");
-            spawner?.PetrolFinished();
             Destroy(gameObject);
         }
     }
@@ -39,7 +38,7 @@ public class PointGiver : MonoBehaviour
             if (petrolPickUp != null)
                 AudioSource.PlayClipAtPoint(petrolPickUp, Camera.main.transform.position, pickUpVolume);
 
-            spawner?.PetrolFinished();
+          
             Destroy(gameObject);
         }
     }

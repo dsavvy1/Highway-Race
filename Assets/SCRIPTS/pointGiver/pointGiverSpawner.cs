@@ -48,29 +48,9 @@ public class PointGiverSpawner : MonoBehaviour
         }
         Debug.Log("[Spawner] Finished spawning batch.");
       
-        if (activePetrol <= 0)
-        {
-            Debug.LogWarning("[Spawner] activePetrol is 0 after spawning. Notifying GameManager to handle level end.");
-            gameManager?.AllPetrolFinished();
-        }
+       
     }
 
    
-    public void PetrolFinished()
-    {
-        activePetrol--;
-        Debug.Log($"[Spawner] PetrolFinished called. activePetrol now={activePetrol}");
-        if (activePetrol <= 0)
-        {
-            Debug.Log("[Spawner] All petrol finished. Notifying GameManager.");
-            gameManager?.AllPetrolFinished();
-        }
-    }
-
-   
-    public void RespawnPetrol()
-    {
-        Debug.Log("[Spawner] Respawning new batch of petrol!");
-        StartSpawning(); // Resets counters and starts new coroutine
-    }
+  
 }
